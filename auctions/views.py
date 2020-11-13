@@ -25,33 +25,6 @@ class AddAuction(forms.Form):
     category = forms.ModelChoiceField(widget=forms.Select, queryset=Category.objects.all(), required=False)
     url = forms.ImageField(label='', required=False)
 
-def index(request):
-    return render(request, "auctions/index.html",{
-        'listings': Listings.objects.all()
-    })
-
-def add(request):
-    if request.method == 'POST':
-        form = AddAuction(request.POST, request.FILES)
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            description = form.cleaned_data['description']
-            bid = form.cleaned_data['bid']
-            category = form.cleaned_data['category']
-            url = form.cleaned_data['url']
-            bid_bd = Bid.objects.create(amount=bid)
-            bid_id = Bid.objects.get(pk=bid_bd.id)
-            listing = Listings.objects.create(title=title, description=description, bid=bid_id, category=category, url=url)
-            return HttpResponseRedirect(reverse('index'))
-        else:
-            return render(request, 'auctions/add', {
-                'add_auction_form': form
-            })
-    return render(request, 'auctions/add.html', {
-        'add_auction_form': AddAuction()
-    })
-
-
 def login_view(request):
     if request.method == "POST":
 
@@ -102,3 +75,35 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def index(request):
+    return render(request, "auctions/index.html",{
+        'listings': Listings.objects.all()
+    })
+
+def add(request):
+    if request.method == 'POST':
+        form = AddAuction(request.POST, request.FILES)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            bid = form.cleaned_data['bid']
+            category = form.cleaned_data['category']
+            url = form.cleaned_data['url']
+            bid_bd = Bid.objects.create(amount=bid)
+            bid_id = Bid.objects.get(pk=bid_bd.id)
+            listing = Listings.objects.create(title=title, description=description, bid=bid_id, category=category, url=url)
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            return render(request, 'auctions/add', {
+                'add_auction_form': form
+            })
+    return render(request, 'auctions/add.html', {
+        'add_auction_form': AddAuction()
+    })
+
+def auction(request, auction_id):
+    auction = Listings.objects.get(id=auction_id)
+    return render(request, 'auctions/auction.html',{
+        'auction': auction
+    })
