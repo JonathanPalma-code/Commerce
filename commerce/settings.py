@@ -120,3 +120,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# MEDIA_ROOT
+
+# is the URL we can use in our templates for the files
+MEDIA_URL= '/media/'
+# the absolute filesystem path to the directory for user-uploaded files
+MEDIA_ROOT= os.path.join(BASE_DIR, 'media') 

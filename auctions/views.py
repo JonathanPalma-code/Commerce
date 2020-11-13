@@ -26,11 +26,13 @@ class AddAuction(forms.Form):
     url = forms.ImageField(label='', required=False)
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html",{
+        'listings': Listings.objects.all()
+    })
 
 def add(request):
     if request.method == 'POST':
-        form = AddAuction(request.POST)
+        form = AddAuction(request.POST, request.FILES)
         if form.is_valid():
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
