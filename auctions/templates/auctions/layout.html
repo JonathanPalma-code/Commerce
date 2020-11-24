@@ -27,6 +27,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'add' %}">Add Action</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'watchlist' user.id %}">Watchlist</a>
+                </li>
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">Log In</a>

@@ -21,7 +21,7 @@ class Listings(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=300)
     bid = models.ForeignKey(Bid, on_delete=models.CASCADE, related_name='Item_bid')
-    category = models.ForeignKey(Category, blank=True, default=1, on_delete=models.SET_DEFAULT, related_name='Item_category')
+    category = models.ForeignKey(Category, blank=True, on_delete=models.CASCADE, related_name='Item_category')
     url = models.ImageField(blank=True, null=True, upload_to='images/')
 
     def __str__(self):
@@ -33,3 +33,10 @@ class Comments(models.Model):
 
     def __str__(self):
         return f'Comments: {self.description}'
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+    product = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name='watchlist_item')
+
+    def __str__(self):
+        return f'{self.product}'

@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 
-from .models import User, Bid, Listings, Comments, Category
-
+from .models import User, Bid, Listings, Comments, Category, Watchlist
 
 class AddAuction(forms.Form):
     title = forms.CharField(label='', max_length=64, widget=forms.TextInput(attrs={
@@ -22,8 +22,9 @@ class AddAuction(forms.Form):
         'placeholder': 'Bid', 
         'class' : 'form-control col-md-4 col-lg-4'
         }))
-    category = forms.ModelChoiceField(widget=forms.Select, queryset=Category.objects.all(), required=False)
+    category = forms.ModelChoiceField(widget=forms.Select, initial=1, queryset=Category.objects.all(), required=True)
     url = forms.ImageField(label='', required=False)
+
 
 def login_view(request):
     if request.method == "POST":
@@ -76,11 +77,13 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 def index(request):
     return render(request, "auctions/index.html",{
         'listings': Listings.objects.all()
     })
 
+@login_required
 def add(request):
     if request.method == 'POST':
         form = AddAuction(request.POST, request.FILES)
@@ -102,8 +105,29 @@ def add(request):
         'add_auction_form': AddAuction()
     })
 
+@login_required
 def auction(request, auction_id):
-    auction = Listings.objects.get(id=auction_id)
-    return render(request, 'auctions/auction.html',{
-        'auction': auction
+    auction = Listings.objects.get(pk=auction_id)
+    in_watch = Watchlist.objects.filter(user=request.user, product=auction)
+
+    if request.method == 'POST':
+        if Watchlist.objects.filter(user=request.user, product=auction):
+            Watchlist.objects.filter(user=request.user.id, product=auction.id).delete()
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            add_wathlist = Watchlist.objects.create(user=request.user, product=auction)
+            return HttpResponseRedirect(reverse('watchlist', args=[request.user.id]))
+        
+    return render(request, 'auctions/auction.html', {
+        'auction': auction,
+        'in_watch': in_watch
+    })
+
+@login_required
+def watchlist(request, user_id):
+    user = User.objects.get(pk=user_id)
+    watchlist = Watchlist.objects.all()
+    return render(request, 'auctions/watchlist.html', {
+        'user': user,
+        'user_watchlist': watchlist
     })
