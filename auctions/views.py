@@ -105,19 +105,20 @@ def add(request):
         'add_auction_form': AddAuction()
     })
 
-@login_required
 def auction(request, auction_id):
     auction = Listings.objects.get(pk=auction_id)
-    in_watch = Watchlist.objects.filter(user=request.user, product=auction)
-
-    if request.method == 'POST':
-        if Watchlist.objects.filter(user=request.user, product=auction):
-            Watchlist.objects.filter(user=request.user.id, product=auction.id).delete()
-            return HttpResponseRedirect(reverse('index'))
-        else:
-            add_wathlist = Watchlist.objects.create(user=request.user, product=auction)
-            return HttpResponseRedirect(reverse('watchlist', args=[request.user.id]))
-        
+    in_watch = None
+    
+    if request.user.is_authenticated:
+        in_watch = Watchlist.objects.filter(user=request.user, product=auction)
+        if request.method == 'POST':
+            if in_watch:
+                in_watch.delete()
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                add_wathlist = Watchlist.objects.create(user=request.user, product=auction)
+                return HttpResponseRedirect(reverse('watchlist', args=[request.user.id]))
+            
     return render(request, 'auctions/auction.html', {
         'auction': auction,
         'in_watch': in_watch
@@ -126,7 +127,7 @@ def auction(request, auction_id):
 @login_required
 def watchlist(request, user_id):
     user = User.objects.get(pk=user_id)
-    watchlist = Watchlist.objects.all()
+    watchlist = Watchlist.objects.filter(user=user)
     return render(request, 'auctions/watchlist.html', {
         'user': user,
         'user_watchlist': watchlist

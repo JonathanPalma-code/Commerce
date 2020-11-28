@@ -3,14 +3,16 @@
 {% block body %}
   <h1>{{ auction.title }}</h1>
 
-  <form method="POST">
-    {% csrf_token %}
-    {% if in_watch %}
-    <input type="submit" value='Remove from Watchlist'>
-    {% else %}
-    <input type="submit" value='Add to Watchlist'>
-    {% endif %}
-  </form>
+  {% if user.is_authenticated %}
+    <form method="POST">
+      {% csrf_token %}
+      {% if in_watch %}
+      <input type="submit" value='Remove from Watchlist'>
+      {% else %}
+      <input type="submit" value='Add to Watchlist'>
+      {% endif %}
+    </form>
+  {% endif %}
 
   <h4><b>Category: </b>{{ auction.category }}</h4>
   {% if auction.url %}
