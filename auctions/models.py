@@ -5,12 +5,6 @@ from django.db import models
 class User(AbstractUser):
     pass
 
-class Bid(models.Model):
-    amount = models.FloatField()
-
-    def __str__(self):
-        return f'£{self.amount}'
-
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
@@ -20,12 +14,20 @@ class Category(models.Model):
 class Listings(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=300)
-    bid = models.ForeignKey(Bid, on_delete=models.CASCADE, related_name='Item_bid')
+    price = models.FloatField(default=0)
     category = models.ForeignKey(Category, blank=True, on_delete=models.CASCADE, related_name='Item_category')
     url = models.ImageField(blank=True, null=True, upload_to='images/')
 
     def __str__(self):
-        return f'{self.id}: {self.title} bid on {self.bid}'
+        return f'{self.id}: {self.title} bid on {self.price}'
+
+class Bid(models.Model):
+    user_id = models.ForeignKey(User, default='', on_delete=models.CASCADE, related_name='user_bid')
+    auction_id = models.ForeignKey(Listings, default='', on_delete=models.CASCADE, related_name='auction_bid')
+    amount = models.FloatField()
+
+    def __str__(self):
+        return f'£{self.amount}'
 
 class Comments(models.Model):
     description = models.CharField(max_length=100)

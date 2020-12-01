@@ -4,27 +4,12 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django import forms
 
+from .forms import AddAuction, AddBid
 from .models import User, Bid, Listings, Comments, Category, Watchlist
 
-class AddAuction(forms.Form):
-    title = forms.CharField(label='', max_length=64, widget=forms.TextInput(attrs={
-        'placeholder': 'Title', 
-        'class' : 'form-control col-md-8 col-lg-8'
-        }))
-    description = forms.CharField(label='', max_length=300, widget=forms.Textarea(attrs={
-        'placeholder': 'Description',
-        'rows' : 10, 
-        'class' : 'form-control col-md-8 col-lg-8'
-        }))
-    bid = forms.IntegerField(label='', widget=forms.NumberInput(attrs={
-        'placeholder': 'Bid', 
-        'class' : 'form-control col-md-4 col-lg-4'
-        }))
-    category = forms.ModelChoiceField(widget=forms.Select, initial=1, queryset=Category.objects.all(), required=True)
-    url = forms.ImageField(label='', required=False)
-
+class ValueTooSmallError(Exception):
+    pass
 
 def login_view(request):
     if request.method == "POST":
@@ -80,7 +65,8 @@ def register(request):
 
 def index(request):
     return render(request, "auctions/index.html",{
-        'listings': Listings.objects.all()
+        'listings': Listings.objects.all(),
+        'bids': Bid.objects.all()
     })
 
 @login_required
@@ -90,12 +76,11 @@ def add(request):
         if form.is_valid():
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
-            bid = form.cleaned_data['bid']
+            price = form.cleaned_data['price']
             category = form.cleaned_data['category']
             url = form.cleaned_data['url']
-            bid_bd = Bid.objects.create(amount=bid)
-            bid_id = Bid.objects.get(pk=bid_bd.id)
-            listing = Listings.objects.create(title=title, description=description, bid=bid_id, category=category, url=url)
+            listing = Listings.objects.create(title=title, description=description, price=price, category=category, url=url)
+            bid = Bid.objects.create(amount=listing.price, auction_id=listing, user_id=request.user)
             return HttpResponseRedirect(reverse('index'))
         else:
             return render(request, 'auctions/add', {
@@ -108,20 +93,40 @@ def add(request):
 def auction(request, auction_id):
     auction = Listings.objects.get(pk=auction_id)
     in_watch = None
+    add_bid = auction.price
     
     if request.user.is_authenticated:
         in_watch = Watchlist.objects.filter(user=request.user, product=auction)
-        if request.method == 'POST':
+        add_bid = AddBid()
+
+        if request.method == 'POST' and 'watchlist_btn' in request.POST:
             if in_watch:
                 in_watch.delete()
                 return HttpResponseRedirect(reverse('index'))
             else:
                 add_wathlist = Watchlist.objects.create(user=request.user, product=auction)
                 return HttpResponseRedirect(reverse('watchlist', args=[request.user.id]))
-            
+        
+        if request.method == 'POST' and 'bid_btn' in request.POST:
+            form = AddBid(request.POST)
+            if form.is_valid():
+                try: 
+                    amount = form.cleaned_data['amount']
+                    if amount <= auction.price:
+                        raise ValueTooSmallError
+                    add_amount = Bid.objects.create(amount=amount, auction_id=auction, user_id=request.user)
+                    Listings.objects.filter(id__in=[auction.id]).update(price=amount)
+                    return HttpResponseRedirect(reverse('auction', args=[auction.id]))
+                except ValueTooSmallError:
+                    return render(request, 'auctions/not_found.html', {
+                        "title_error":"Bid Error",
+                        "message_error":"Your bid has to be bigger than the actual bid."
+                    })
+
     return render(request, 'auctions/auction.html', {
         'auction': auction,
-        'in_watch': in_watch
+        'in_watch': in_watch,
+        'add_bid': add_bid
     })
 
 @login_required

@@ -3,21 +3,28 @@
 {% block body %}
   <h1>{{ auction.title }}</h1>
 
-  {% if user.is_authenticated %}
-    <form method="POST">
-      {% csrf_token %}
-      {% if in_watch %}
-      <input type="submit" value='Remove from Watchlist'>
-      {% else %}
-      <input type="submit" value='Add to Watchlist'>
-      {% endif %}
-    </form>
-  {% endif %}
-
   <h4><b>Category: </b>{{ auction.category }}</h4>
   {% if auction.url %}
     <img src="{{ auction.url.url }}" alt="{{ auction.title }}" width="800">
   {% endif %}
   <p><b>Description: </b>{{ auction.description }}</p>
-  <h4>{{ auction.bid }}</h4>
+  <h4>{{ auction.price }}</h4>
+  
+  {% if user.is_authenticated %}
+  <form method="POST">
+    <h4>{{ add_bid }}</h4>
+      {% csrf_token %}
+      <input type="submit" name='bid_btn' value='Add a Bid'>
+    </form>
+    
+    <form method="POST">
+      {% csrf_token %}
+      {% if in_watch %}
+      <input type="submit" name='watchlist_btn' value='Remove from Watchlist'>
+      {% else %}
+      <input type="submit" name='watchlist_btn' value='Add to Watchlist'>
+      {% endif %}
+    </form>
+  {% endif %}
+
 {% endblock %}
