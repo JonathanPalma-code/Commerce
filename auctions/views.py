@@ -94,6 +94,7 @@ def auction(request, auction_id):
     auction = Listings.objects.get(pk=auction_id)
     in_watch = None
     add_bid = auction.price
+    bid_user = None
     
     if request.user.is_authenticated:
         in_watch = Watchlist.objects.filter(user=request.user, product=auction)
@@ -122,11 +123,20 @@ def auction(request, auction_id):
                         "title_error":"Bid Error",
                         "message_error":"Your bid has to be bigger than the actual bid."
                     })
+        
+        bid_user_id = Bid.objects.filter(auction_id=auction.id).first().user_id.id
+        bid_user = Bid.objects.filter(auction_id=auction.id).first()
+        print(bid_user_id, request.user.id, bid_user)
+        if bid_user_id and request.method == 'POST' and 'close_btn' in request.POST:
+            bid_user.delete()
+            auction.delete()
+            return HttpResponseRedirect(reverse('index'))
 
     return render(request, 'auctions/auction.html', {
         'auction': auction,
         'in_watch': in_watch,
-        'add_bid': add_bid
+        'add_bid': add_bid,
+        'bid_user_id': bid_user_id
     })
 
 @login_required

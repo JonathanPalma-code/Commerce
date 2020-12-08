@@ -25,3 +25,4 @@ class AddBid(forms.Form):
         'placeholder': 'Bid', 
         'class' : 'form-control col-md-4 col-lg-4'
         }))
+        

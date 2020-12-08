@@ -8,23 +8,32 @@
     <img src="{{ auction.url.url }}" alt="{{ auction.title }}" width="800">
   {% endif %}
   <p><b>Description: </b>{{ auction.description }}</p>
-  <h4>{{ auction.price }}</h4>
-  
+  <h4>£{{ auction.price }}</h4>
+
   {% if user.is_authenticated %}
-  <form method="POST">
-    <h4>{{ add_bid }}</h4>
-      {% csrf_token %}
-      <input type="submit" name='bid_btn' value='Add a Bid'>
-    </form>
-    
+  
     <form method="POST">
       {% csrf_token %}
       {% if in_watch %}
-      <input type="submit" name='watchlist_btn' value='Remove from Watchlist'>
+        <input type="submit" name='watchlist_btn' value='Remove from Watchlist'>
       {% else %}
-      <input type="submit" name='watchlist_btn' value='Add to Watchlist'>
-      {% endif %}
+        <input type="submit" name='watchlist_btn' value='Add to Watchlist'>       {% endif %}
     </form>
+
+    {% if auction %}
+      <form method="POST">
+        <h4>{{ add_bid }}</h4>
+        {% csrf_token %}
+        <input type="submit" name='bid_btn' value='Add a Bid'>
+      </form>
+    {% endif %}
+        
+    {% if bid_user_id == request.user.id %}
+      <form method="POST">
+        {% csrf_token %}
+        <input type="submit" name='close_btn' value="Close Bid">
+      </form>
+    {% endif %}
   {% endif %}
 
 {% endblock %}

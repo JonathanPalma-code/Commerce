@@ -27,7 +27,7 @@ class Bid(models.Model):
     amount = models.FloatField()
 
     def __str__(self):
-        return f'£{self.amount}'
+        return f'{self.user_id} - {self.auction_id} starting with £{self.amount}'
 
 class Comments(models.Model):
     description = models.CharField(max_length=100)
