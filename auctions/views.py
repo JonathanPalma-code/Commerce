@@ -5,8 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from django.db.models import Max
+
 from .forms import AddAuction, AddBid
-from .models import User, Bid, Listings, Comments, Category, Watchlist
+from .models import User, Bid, Auction, Comment, Category, Watchlist, Product
+from datetime import datetime
 
 class ValueTooSmallError(Exception):
     pass
@@ -65,7 +68,7 @@ def register(request):
 
 def index(request):
     return render(request, "auctions/index.html",{
-        'listings': Listings.objects.all(),
+        'auction_listings': Auction.objects.exclude(active=False).all().order_by('-id'),
         'bids': Bid.objects.all()
     })
 
@@ -74,13 +77,15 @@ def add(request):
     if request.method == 'POST':
         form = AddAuction(request.POST, request.FILES)
         if form.is_valid():
+            date = datetime.now().isoformat(' ', 'seconds')
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
             price = form.cleaned_data['price']
             category = form.cleaned_data['category']
             url = form.cleaned_data['url']
-            listing = Listings.objects.create(title=title, description=description, price=price, category=category, url=url)
-            bid = Bid.objects.create(amount=listing.price, auction_id=listing, user_id=request.user)
+            product = Product.objects.create(title=title, description=description, price=price, category=category, url=url, date_posted=date, creator=request.user)
+            auction = Auction.objects.create(product=product)
+            bid = Bid.objects.create(amount=product.price, auction=auction, user=request.user)
             return HttpResponseRedirect(reverse('index'))
         else:
             return render(request, 'auctions/add', {
@@ -91,13 +96,14 @@ def add(request):
     })
 
 def auction(request, auction_id):
-    auction = Listings.objects.get(pk=auction_id)
+    auction = Auction.objects.get(pk=auction_id)
     in_watch = None
-    add_bid = auction.price
-    bid_user = None
+    add_bid = auction.product.price
+    bid_username = None
+    winner = None
     
     if request.user.is_authenticated:
-        in_watch = Watchlist.objects.filter(user=request.user, product=auction)
+        in_watch = Watchlist.objects.filter(user=request.user, auction=auction)
         add_bid = AddBid()
 
         if request.method == 'POST' and 'watchlist_btn' in request.POST:
@@ -105,18 +111,18 @@ def auction(request, auction_id):
                 in_watch.delete()
                 return HttpResponseRedirect(reverse('index'))
             else:
-                add_wathlist = Watchlist.objects.create(user=request.user, product=auction)
+                add_wathlist = Watchlist.objects.create(user=request.user, auction=auction)
                 return HttpResponseRedirect(reverse('watchlist', args=[request.user.id]))
         
         if request.method == 'POST' and 'bid_btn' in request.POST:
             form = AddBid(request.POST)
-            if form.is_valid():
+            if form.is_valid() and auction.active:
                 try: 
                     amount = form.cleaned_data['amount']
-                    if amount <= auction.price:
+                    if amount <= auction.product.price:
                         raise ValueTooSmallError
-                    add_amount = Bid.objects.create(amount=amount, auction_id=auction, user_id=request.user)
-                    Listings.objects.filter(id__in=[auction.id]).update(price=amount)
+                    add_amount = Bid.objects.create(user=request.user, auction=auction, amount=amount)
+                    Product.objects.filter(id__in=[auction.product.id]).update(price=amount)
                     return HttpResponseRedirect(reverse('auction', args=[auction.id]))
                 except ValueTooSmallError:
                     return render(request, 'auctions/not_found.html', {
@@ -124,19 +130,18 @@ def auction(request, auction_id):
                         "message_error":"Your bid has to be bigger than the actual bid."
                     })
         
-        bid_user_id = Bid.objects.filter(auction_id=auction.id).first().user_id.id
-        bid_user = Bid.objects.filter(auction_id=auction.id).first()
-        print(bid_user_id, request.user.id, bid_user)
-        if bid_user_id and request.method == 'POST' and 'close_btn' in request.POST:
-            bid_user.delete()
-            auction.delete()
-            return HttpResponseRedirect(reverse('index'))
+        bid_username = Bid.objects.filter(auction_id=auction.id).first().user
+        winner = Bid.objects.filter(auction_id=auction.id).last().user
+        if bid_username and request.method == 'POST' and 'close_btn' in request.POST:
+            Auction.objects.filter(id__in=[auction.id]).update(winner=str(winner), active=False)
+            return HttpResponseRedirect(reverse('auction', args=[auction.id]))
 
     return render(request, 'auctions/auction.html', {
         'auction': auction,
         'in_watch': in_watch,
         'add_bid': add_bid,
-        'bid_user_id': bid_user_id
+        'bid_user_name': bid_username,
+        'winner': winner
     })
 
 @login_required

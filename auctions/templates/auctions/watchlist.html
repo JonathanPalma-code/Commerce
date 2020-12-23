@@ -6,17 +6,17 @@
   
   <ul>
     {% for watchlist in user_watchlist %}
-    <a class="nav-link" href="{% url 'auction' watchlist.product.id %}">
+    <a class="nav-link" href="{% url 'auction' watchlist.auction.id %}">
       <span>
         <li>
-          <h3>{{ watchlist.product.title }}</h3>
+          <h3>{{ watchlist.auction.product.title }}</h3>
         </li>
-        <p><b>Category:</b> {{ watchlist.product.category }}</p>
-        <p><b>Description: </b>{{ watchlist.product.description }}</p>
-        {% if watchlist.product.url %}
-        <img src="{{ watchlist.product.url.url }}" alt=" {{ watchlist.product.title }}" width="500">
+        <p><b>Category:</b> {{ watchlist.auction.product.category }}</p>
+        <p><b>Description: </b>{{ watchlist.auction.product.description }}</p>
+        {% if watchlist.auction.product.url %}
+        <img src="{{ watchlist.auction.product.url.url }}" alt=" {{ watchlist.auction.product.title }}" width="500">
         {% endif %}
-        <h4>{{ watchlist.product.bid }}</h4>
+        <h4>£{{ watchlist.auction.product.price }}</h4>
       </span>
     </a>
     {% empty %}

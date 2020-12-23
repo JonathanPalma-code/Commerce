@@ -1,17 +1,24 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-  <h1>{{ auction.title }}</h1>
-
-  <h4><b>Category: </b>{{ auction.category }}</h4>
-  {% if auction.url %}
-    <img src="{{ auction.url.url }}" alt="{{ auction.title }}" width="800">
+  <h1>{{ auction.product.title }}</h1>
+  <p>Created by: {{ auction.product.creator }} on {{ auction.product.date_posted }}</p>
+  <h4><b>Category: </b>{{ auction.product.category }}</h4>
+  {% if auction.product.url %}
+    <img src="{{ auction.product.url.url }}" alt="{{ auction.product.title }}" width="800">
   {% endif %}
-  <p><b>Description: </b>{{ auction.description }}</p>
-  <h4>£{{ auction.price }}</h4>
+  <p><b>Description: </b>{{ auction.product.description }}</p>
+
+  {% if not auction.active %}
+    {% if winner == request.user %}
+      <h1>You won the Auction for</h1>
+    {% else %}
+      <h1> {{ winner }} won the Auction for</h1>
+    {% endif %}
+  {% endif %}
+  <h1>£{{ auction.product.price }}</h1>
 
   {% if user.is_authenticated %}
-  
     <form method="POST">
       {% csrf_token %}
       {% if in_watch %}
@@ -20,19 +27,19 @@
         <input type="submit" name='watchlist_btn' value='Add to Watchlist'>       {% endif %}
     </form>
 
-    {% if auction %}
+    {% if auction.active %}  
       <form method="POST">
         <h4>{{ add_bid }}</h4>
         {% csrf_token %}
         <input type="submit" name='bid_btn' value='Add a Bid'>
       </form>
-    {% endif %}
-        
-    {% if bid_user_id == request.user.id %}
-      <form method="POST">
-        {% csrf_token %}
-        <input type="submit" name='close_btn' value="Close Bid">
-      </form>
+          
+      {% if bid_user_name.id == request.user.id %}
+        <form method="POST">
+          {% csrf_token %}
+          <input type="submit" name='close_btn' value="Close Bid">
+        </form>
+      {% endif %}
     {% endif %}
   {% endif %}
 

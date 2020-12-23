@@ -1,4 +1,4 @@
-from .models import Listings, Bid
+from .models import Auction, Bid
 from django import forms
 
 from .models import Category, Bid

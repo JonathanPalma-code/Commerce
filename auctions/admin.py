@@ -1,16 +1,17 @@
 from django.contrib import admin
 
-from .models import User, Bid, Category, Listings, Comments, Watchlist
+from .models import User, Bid, Category, Product, Auction, Comment, Watchlist
 
-class ListingsAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "price", "category", "url")
+class ProductAdmin(admin.ModelAdmin):
+  list_display = ("id", "title", "price", "category", "date_posted", "creator")
 
-class BidAdmin(admin.ModelAdmin):
-    bid_display = ("id", "user_id", "auction_id", "amount")
+class AuctionAdmin(admin.ModelAdmin):
+  list_display = ("id", "product", "winner", "active" )
 
 admin.site.register(User)
-admin.site.register(Bid, BidAdmin)
+admin.site.register(Bid)
 admin.site.register(Category)
-admin.site.register(Listings, ListingsAdmin)
-admin.site.register(Comments)
+admin.site.register(Product, ProductAdmin)
+admin.site.register(Auction, AuctionAdmin)
+admin.site.register(Comment)
 admin.site.register(Watchlist)
