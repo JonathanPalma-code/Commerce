@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 class User(AbstractUser):
     pass
@@ -40,7 +41,9 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     description = models.CharField(max_length=100)
-    auction = models.ManyToManyField(Auction, blank=True, related_name='Item')
+    auction = models.ForeignKey(Auction, default='', on_delete=models.CASCADE, related_name='Item')
+    user = models.ForeignKey(User, default='', on_delete=models.CASCADE, related_name='Comment_Owner')
+    time_sent = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'Comments: {self.description}'

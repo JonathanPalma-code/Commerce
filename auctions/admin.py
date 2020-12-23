@@ -8,10 +8,16 @@ class ProductAdmin(admin.ModelAdmin):
 class AuctionAdmin(admin.ModelAdmin):
   list_display = ("id", "product", "winner", "active" )
 
+class WatchlistAdmin(admin.ModelAdmin):
+  list_display = ("user", "auction")
+
+class CommentAdmin(admin.ModelAdmin):
+  list_display = ("user", "auction", "description")
+
 admin.site.register(User)
 admin.site.register(Bid)
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Auction, AuctionAdmin)
-admin.site.register(Comment)
-admin.site.register(Watchlist)
+admin.site.register(Comment, CommentAdmin)
+admin.site.register(Watchlist, WatchlistAdmin)

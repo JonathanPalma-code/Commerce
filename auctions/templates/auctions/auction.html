@@ -41,6 +41,16 @@
         </form>
       {% endif %}
     {% endif %}
+
+    <form method="POST">
+      <p>{{ add_comment }}</p>
+      {% csrf_token %}
+      <input type="submit" name='comment_btn' value="Comment">
+    </form>
+
+    {% for comment in comments %}
+      <p>{{ comment.description }}</p>
+    {% endfor%}
   {% endif %}
 
 {% endblock %}

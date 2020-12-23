@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from django.db.models import Max
 
-from .forms import AddAuction, AddBid
+from .forms import AddAuction, AddBid, AddComment
 from .models import User, Bid, Auction, Comment, Category, Watchlist, Product
 from datetime import datetime
 
@@ -97,10 +97,12 @@ def add(request):
 
 def auction(request, auction_id):
     auction = Auction.objects.get(pk=auction_id)
+    comments = Comment.objects.filter(auction=auction.id)
     in_watch = None
     add_bid = auction.product.price
     bid_username = None
     winner = None
+    comment = None
     
     if request.user.is_authenticated:
         in_watch = Watchlist.objects.filter(user=request.user, auction=auction)
@@ -136,12 +138,22 @@ def auction(request, auction_id):
             Auction.objects.filter(id__in=[auction.id]).update(winner=str(winner), active=False)
             return HttpResponseRedirect(reverse('auction', args=[auction.id]))
 
+        if request.method == 'POST' and 'comment_btn' in request.POST:
+            form = AddComment(request.POST)
+            if form.is_valid():
+                comment = form.cleaned_data['comment']
+                Comment.objects.create(description=comment, auction=auction, user=request.user)
+                return HttpResponseRedirect(reverse('auction', args=[auction.id]))
+
     return render(request, 'auctions/auction.html', {
         'auction': auction,
         'in_watch': in_watch,
         'add_bid': add_bid,
         'bid_user_name': bid_username,
-        'winner': winner
+        'winner': winner,
+        'add_comment': AddComment(),
+        'comments': comments
+
     })
 
 @login_required

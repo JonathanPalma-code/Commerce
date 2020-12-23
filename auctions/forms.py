@@ -25,4 +25,10 @@ class AddBid(forms.Form):
         'placeholder': 'Bid', 
         'class' : 'form-control col-md-4 col-lg-4'
         }))
+
+class AddComment(forms.Form):
+    comment = forms.CharField(label='Comment', max_length=200, widget=forms.Textarea(attrs={ 
+        'rows' : 4, 
+        'class' : 'form-control col-md-4 col-lg-4'
+        }))
         
