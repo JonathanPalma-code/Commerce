@@ -152,7 +152,7 @@ def auction(request, auction_id):
         'bid_user_name': bid_username,
         'winner': winner,
         'add_comment': AddComment(),
-        'comments': comments
+        'comments': comments.order_by('-time_sent')
 
     })
 

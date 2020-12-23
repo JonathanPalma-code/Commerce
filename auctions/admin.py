@@ -12,7 +12,7 @@ class WatchlistAdmin(admin.ModelAdmin):
   list_display = ("user", "auction")
 
 class CommentAdmin(admin.ModelAdmin):
-  list_display = ("user", "auction", "description")
+  list_display = ("user", "auction", "description", "time_sent")
 
 admin.site.register(User)
 admin.site.register(Bid)
