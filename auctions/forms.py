@@ -31,4 +31,7 @@ class AddComment(forms.Form):
         'rows' : 4, 
         'class' : 'form-control col-md-4 col-lg-4'
         }))
+
+class CategoryOption(forms.Form):
+    category = forms.ModelChoiceField(label='', widget=forms.Select, queryset=Category.objects.all(), required=True)
         

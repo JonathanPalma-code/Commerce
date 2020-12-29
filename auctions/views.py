@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from django.db.models import Max
 
-from .forms import AddAuction, AddBid, AddComment
+from .forms import AddAuction, AddBid, AddComment, CategoryOption
 from .models import User, Bid, Auction, Comment, Category, Watchlist, Product
 from datetime import datetime
 
@@ -67,9 +67,19 @@ def register(request):
 
 
 def index(request):
-    return render(request, "auctions/index.html",{
+    if request.method == "POST":
+        form = CategoryOption(request.POST)
+        queryset = Product.objects.filter(category = form['category'].value())
+        dynamic_search = Auction.objects.exclude(active=False).filter(product__in=queryset).order_by('-id')
+
+        return render(request, "auctions/index.html", {
+            'auction_listings': dynamic_search,
+            'category_option': form
+        })
+
+    return render(request, "auctions/index.html", {
         'auction_listings': Auction.objects.exclude(active=False).all().order_by('-id'),
-        'bids': Bid.objects.all()
+        'category_option': CategoryOption()
     })
 
 @login_required

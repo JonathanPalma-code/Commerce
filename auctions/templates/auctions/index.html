@@ -2,7 +2,11 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div>Filter by Category {{ category_option }}
+        <input type="submit" value="Search"></div>
+    </form>
     <ul>
         {% for list in auction_listings %}
             <a class="nav-link" href="{% url 'auction' list.id %}">
