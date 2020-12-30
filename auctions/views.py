@@ -11,6 +11,8 @@ from .forms import AddAuction, AddBid, AddComment, CategoryOption
 from .models import User, Bid, Auction, Comment, Category, Watchlist, Product
 from datetime import datetime
 
+from django.db.models import Exists
+
 class ValueTooSmallError(Exception):
     pass
 
@@ -67,6 +69,9 @@ def register(request):
 
 
 def index(request):
+    auction = Auction.objects.exclude(active=False).all().order_by('-id')
+    query_wathchlist = Watchlist.objects.filter(user=request.user, auction__in=auction)
+
     if request.method == "POST":
         form = CategoryOption(request.POST)
         queryset = Product.objects.filter(category = form['category'].value())
@@ -78,8 +83,9 @@ def index(request):
         })
 
     return render(request, "auctions/index.html", {
-        'auction_listings': Auction.objects.exclude(active=False).all().order_by('-id'),
-        'category_option': CategoryOption()
+        'auction_listings': auction,
+        'category_option': CategoryOption(),
+        'in_watchlist': query_wathchlist
     })
 
 @login_required

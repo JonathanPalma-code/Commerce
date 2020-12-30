@@ -7,21 +7,25 @@
         <div>Filter by Category {{ category_option }}
         <input type="submit" value="Search"></div>
     </form>
-    <ul>
-        {% for list in auction_listings %}
-            <a class="nav-link" href="{% url 'auction' list.id %}">
-                <span>
-                    <li><h3>{{ list.product.title }}</h3></li>
-                    <p><b>Category:</b> {{ list.product.category }}</p>
-                    <p><b>Description: </b>{{ list.product.description }}</p>
-                        {% if list.product.url %}
-                        <img src="{{ list.product.url.url }}" alt=" {{ list.product.title }}" width="500">
-                        {% endif %}
-                    <h4>£{{ list.product.price }}</h4>
-                </span>
-            </a>
-        {% empty %}
-        <li>No active auctions.</li>
-        {% endfor %}
-    </ul>
+    {% for list in auction_listings %}
+        <a class="nav-link" href="{% url 'auction' list.id %}">
+            <div class="card" style="width: 18rem;">
+                {% for item in in_watchlist %}
+                    {% if item.auction.product.title == list.product.title %}
+                    <h5 class="card-header">Watchlist</h5>
+                    {% endif %}
+                {% endfor %}
+                {% if list.product.url %}
+                <img class="card-img-top" src="{{ list.product.url.url }}" alt=" {{ list.product.title }}" width="500">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ list.product.title }}</h5>
+                    <p class="card-text">{{ list.product.description }}</p>
+                    <p class="card-text font-weight-bold">£{{ list.product.price }}</p>
+                </div>
+            </div>
+        </a>
+    {% empty %}
+    <li>No active auctions.</li>
+    {% endfor %}
 {% endblock %}
