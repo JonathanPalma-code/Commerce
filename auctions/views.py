@@ -70,7 +70,10 @@ def register(request):
 
 def index(request):
     auction = Auction.objects.exclude(active=False).all().order_by('-id')
-    query_wathchlist = Watchlist.objects.filter(user=request.user, auction__in=auction)
+    query_wachlist = None
+
+    if request.user.is_authenticated:
+        query_wachlist = Watchlist.objects.filter(user=request.user, auction__in=auction)
 
     if request.method == "POST":
         form = CategoryOption(request.POST)
@@ -85,7 +88,7 @@ def index(request):
     return render(request, "auctions/index.html", {
         'auction_listings': auction,
         'category_option': CategoryOption(),
-        'in_watchlist': query_wathchlist
+        'in_watchlist': query_wachlist
     })
 
 @login_required

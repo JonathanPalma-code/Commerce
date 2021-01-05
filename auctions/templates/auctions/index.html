@@ -1,31 +1,45 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <div>Filter by Category {{ category_option }}
-        <input type="submit" value="Search"></div>
-    </form>
-    {% for list in auction_listings %}
-        <a class="nav-link" href="{% url 'auction' list.id %}">
-            <div class="card" style="width: 18rem;">
-                {% for item in in_watchlist %}
-                    {% if item.auction.product.title == list.product.title %}
-                    <h5 class="card-header">Watchlist</h5>
-                    {% endif %}
-                {% endfor %}
-                {% if list.product.url %}
-                <img class="card-img-top" src="{{ list.product.url.url }}" alt=" {{ list.product.title }}" width="500">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ list.product.title }}</h5>
-                    <p class="card-text">{{ list.product.description }}</p>
-                    <p class="card-text font-weight-bold">£{{ list.product.price }}</p>
-                </div>
+<main class="index">
+    <section class="index-title">
+        <h2>Active Listings</h2>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div>Filter by Category {{ category_option }}
+                <input type="submit" value="Search">
             </div>
-        </a>
-    {% empty %}
-    <li>No active auctions.</li>
-    {% endfor %}
+        </form>
+    </section>
+    <section class='container'>
+        <div class="cards">
+            {% for list in auction_listings %}
+            <a class="nav-link" href="{% url 'auction' list.id %}">
+                <div class="card">
+                    {% if list.product.url %}
+    
+                    <img class="card__img" src="{{ list.product.url.url }}" alt=" {{ list.product.title }}" width="100%" height="200px">
+    
+                    {% endif %}
+                    <div class="card__info">
+                        <h5 class="card__title">{{ list.product.title }}</h5>
+                        <p class="card__content">{{ list.product.description }}</p>
+                    </div>
+                    <h5 class="card__price font-weight-bold">£{{ list.product.price }}</h5>
+                    {% for item in in_watchlist %}
+                    {% if item.auction.product.title == list.product.title %}
+    
+                    <img class="card__watchlist" src="{% static 'logo/watchlist.png' %}" alt="watchlist" height="20px">
+    
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </a>
+            {% empty %}
+            <li>No active auctions.</li>
+            {% endfor %}
+        </div>
+    </section>
+</main>
 {% endblock %}

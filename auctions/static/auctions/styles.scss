@@ -1,0 +1,77 @@
+$background-colour: aliceblue;
+$sidebar-color: steelblue;
+$radious: 25px;
+$title-weight: bold;
+$wiki: italic;
+$shadow-black:
+0 2px 5px 5px rgba(111, 104, 104, 0.1),
+0 2px 5px 5px rgba(100, 100, 132, 0.1);
+
+$shadow-white: 3px 3px 5px 6px aliceblue;
+
+body {
+  padding: 2%;
+  background-color: $background-colour;
+  font-family: monospace;
+
+  .right-menu {
+    display: flex;
+    justify-content: flex-end;
+  }
+  hr {
+    margin-bottom: auto;
+  }
+  .signed_in {
+    text-align: right;
+  }
+  
+  .index {
+
+    .index-title {
+      text-align: center;
+      padding: 4%;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-column-gap: 20px;
+      grid-row-gap: 10px;
+      
+      .card {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: 1fr auto auto;
+        background-color: white;
+        border-radius: 10px;
+        color: #101010;
+        height: 100%;
+        padding-right: 5%;
+        padding-left: 5%;
+        transition: 0.5s;
+        
+        &__img {
+          grid-column: 1 / 3;
+          grid-row: 1 / 2;
+          object-fit: scale-down;
+        }
+  
+        &__info {
+          grid-column: 1 / 3;
+          grid-row: 2 / 3;
+          padding-top: 5%;
+        }
+
+        &__price {
+          grid-column: 1 / 2;
+          grid-row: 3 / 4;
+        }
+
+        &:hover {
+          box-shadow: $shadow-black;
+          transition: 0.5s;
+        }
+      }
+    }
+  }
+}
