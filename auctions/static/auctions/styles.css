@@ -53,5 +53,79 @@ body .index .cards .card:hover {
   box-shadow: 0 2px 5px 5px rgba(111, 104, 104, 0.1), 0 2px 5px 5px rgba(100, 100, 132, 0.1);
   transition: 0.5s;
 }
+body .auction {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(5, auto);
+}
+body .auction__info {
+  grid-column: 1/4;
+  grid-row: 1/2;
+  margin: 2%;
+  text-align: center;
+}
+body .auction__img {
+  grid-column: 1/2;
+  grid-row: 2/4;
+}
+body .auction__content {
+  grid-column: 2/4;
+  grid-row: 2/3;
+  padding: 2%;
+  text-align: justify;
+}
+body .auction__price {
+  padding: 4%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .auction__price .price {
+  display: inline-block;
+}
+body .auction__buttons .watchlist {
+  text-align: right;
+  padding: 4%;
+}
+body .auction__buttons .watchlist input {
+  width: 100%;
+}
+body .auction__buttons .bid {
+  padding: 4%;
+}
+body .auction__buttons .bid__button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+body .auction__buttons .bid__button input {
+  width: 100%;
+}
+body .auction__buttons .close-bid {
+  text-align: right;
+  padding: 4%;
+}
+body .auction__buttons .close-bid input {
+  width: 100%;
+}
+body .auction__comment {
+  grid-column: 1/4;
+  grid-row: 4/5;
+}
+body .auction__comment section {
+  padding: 2%;
+}
+body .auction__comment .comment-button {
+  padding-top: 1%;
+}
+body .auction__comment .comment-button input {
+  width: 25%;
+}
+body .auction__comment .content {
+  padding-right: 4%;
+}
+body .auction__comment .content .author {
+  margin: 0;
+}
 
 /*# sourceMappingURL=styles.css.map */

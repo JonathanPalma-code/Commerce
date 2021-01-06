@@ -8,7 +8,7 @@ class AddAuction(forms.Form):
         'placeholder': 'Title', 
         'class' : 'form-control col-md-8 col-lg-8'
         }))
-    description = forms.CharField(label='', max_length=300, widget=forms.Textarea(attrs={
+    description = forms.CharField(label='', max_length=800, widget=forms.Textarea(attrs={
         'placeholder': 'Description',
         'rows' : 10, 
         'class' : 'form-control col-md-8 col-lg-8'
@@ -23,13 +23,13 @@ class AddAuction(forms.Form):
 class AddBid(forms.Form):
     amount = forms.IntegerField(label='', widget=forms.NumberInput(attrs={
         'placeholder': 'Bid', 
-        'class' : 'form-control col-md-4 col-lg-4'
+        'class' : 'form-control'
         }))
 
 class AddComment(forms.Form):
-    comment = forms.CharField(label='Comment', max_length=200, widget=forms.Textarea(attrs={ 
+    comment = forms.CharField(label='Comment', max_length=500, widget=forms.Textarea(attrs={ 
         'rows' : 4, 
-        'class' : 'form-control col-md-4 col-lg-4'
+        'class' : 'form-control'
         }))
 
 class CategoryOption(forms.Form):

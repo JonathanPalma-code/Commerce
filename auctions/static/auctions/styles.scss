@@ -74,4 +74,102 @@ body {
       }
     }
   }
+
+  .auction {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, auto);
+
+    &__info {
+      grid-column: 1 / 4;
+      grid-row: 1 / 2;
+      margin: 2%;
+      text-align: center;
+      
+    }
+
+    &__img {
+      grid-column: 1 / 2;
+      grid-row: 2 / 4;
+    }
+
+    &__content {
+      grid-column: 2 / 4;
+      grid-row: 2 / 3;
+      padding: 2%;
+      text-align: justify;
+    }
+
+    &__price {
+      padding: 4%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .price {
+        display: inline-block;
+      }
+    }
+
+    &__buttons {
+      
+      .watchlist {
+        text-align: right;
+        padding: 4%;
+
+        input {
+          width: 100%;
+        }
+      }
+
+      .bid {
+        padding: 4%;
+        
+        &__button {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+
+          input {
+            width: 100%;
+          }
+        }
+      }
+
+      .close-bid {
+        text-align: right;
+        padding: 4%;
+
+        input {
+          width: 100%;
+        }
+      }
+    }
+
+    &__comment {
+      grid-column: 1 / 4;
+      grid-row: 4 / 5;
+
+      section {
+        padding: 2%;
+      }
+  
+      .comment-button {
+        padding-top: 1%; 
+  
+        input {
+          width: 25%;
+        }
+      }
+
+
+      .content {
+        padding-right: 4%;
+
+        .author {
+          margin: 0;
+        }
+      }
+    }
+  }
 }

@@ -7,39 +7,39 @@
         <h2>Active Listings</h2>
         <form method="POST" action="">
             {% csrf_token %}
-            <div>Filter by Category {{ category_option }}
+            <section>Filter by Category {{ category_option }}
                 <input type="submit" value="Search">
-            </div>
+            </section>
         </form>
     </section>
     <section class='container'>
-        <div class="cards">
+        <section class="cards">
             {% for list in auction_listings %}
             <a class="nav-link" href="{% url 'auction' list.id %}">
-                <div class="card">
+                <section class="card">
                     {% if list.product.url %}
-    
                     <img class="card__img" src="{{ list.product.url.url }}" alt=" {{ list.product.title }}" width="100%" height="200px">
-    
                     {% endif %}
-                    <div class="card__info">
+                    <section class="card__info">
                         <h5 class="card__title">{{ list.product.title }}</h5>
+                        {% if list.product.description|length > 25 %}
+                        <p class="card__content">{{ list.product.description|slice:":25" }}...</p>
+                        {% else %}
                         <p class="card__content">{{ list.product.description }}</p>
-                    </div>
+                        {% endif %}
+                    </section>
                     <h5 class="card__price font-weight-bold">£{{ list.product.price }}</h5>
                     {% for item in in_watchlist %}
                     {% if item.auction.product.title == list.product.title %}
-    
                     <img class="card__watchlist" src="{% static 'logo/watchlist.png' %}" alt="watchlist" height="20px">
-    
                     {% endif %}
                     {% endfor %}
-                </div>
+                </section>
             </a>
             {% empty %}
             <li>No active auctions.</li>
             {% endfor %}
-        </div>
+        </section>
     </section>
 </main>
 {% endblock %}
