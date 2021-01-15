@@ -6,18 +6,20 @@ from .models import Category, Bid
 class AddAuction(forms.Form):
     title = forms.CharField(label='', max_length=64, widget=forms.TextInput(attrs={
         'placeholder': 'Title', 
-        'class' : 'form-control col-md-8 col-lg-8'
+        'class' : 'add-form__title form-control'
         }))
     description = forms.CharField(label='', max_length=800, widget=forms.Textarea(attrs={
         'placeholder': 'Description',
         'rows' : 10, 
-        'class' : 'form-control col-md-8 col-lg-8'
+        'class' : 'add-form__description form-control'
         }))
-    price = forms.IntegerField(label='', widget=forms.NumberInput(attrs={
+    price = forms.DecimalField(label='', min_value=0, widget=forms.NumberInput(attrs={
         'placeholder': 'Bid', 
-        'class' : 'form-control col-md-4 col-lg-4'
+        'class' : 'add-form__price form-control'
         }))
-    category = forms.ModelChoiceField(widget=forms.Select, initial=1, queryset=Category.objects.all(), required=True)
+    category = forms.ModelChoiceField(label='', initial=1, queryset=Category.objects.all(), required=True, widget=forms.Select(attrs={
+        'class' : 'add-form__category form-control'
+    }))
     url = forms.ImageField(label='', required=False)
 
 class AddBid(forms.Form):

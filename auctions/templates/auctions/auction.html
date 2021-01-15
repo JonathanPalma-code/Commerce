@@ -18,13 +18,15 @@
   </section>
 
   <section class="auction__price">
-    {% if not auction.active %}
-    {% if winner == request.user %}
-    <h1>You won the Auction for</h1>
-    {% else %}
-    <h1> {{ winner }} won the Auction!</h1>
-    {% endif %}
-    {% endif %}
+    <section class="winner">
+      {% if not auction.active %}
+      {% if winner == request.user %}
+      <h1>You won the Auction!</h1>
+      {% else %}
+      <h1> {{ winner }} won the Auction!</h1>
+      {% endif %}
+      {% endif %}
+    </section>
     <h4 class="price"><b>Price: </b></h4>
     <h1 class="price">£{{ auction.product.price }}</h1>
   </section>
@@ -68,7 +70,7 @@
       </section>
     </form>
     <section class="content">
-    {% for comment in comments %}
+      {% for comment in comments %}
       <p class="author"><b>{{comment.user}}</b></p>
       <p>{{ comment.description }}</p>
       {% endfor%}
