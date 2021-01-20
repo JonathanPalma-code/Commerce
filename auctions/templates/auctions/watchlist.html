@@ -3,8 +3,8 @@
 {% block body %}
 <main class="watchlist">
   <section class="watchlist-title">
-    <h2>Watchlist</h2>
     <h5>Hello {{ user }}.</h5>
+    <h2>Watchlist</h2>
   </section>
 
   <section class="container">
@@ -33,7 +33,7 @@
         </section>
       </a>
       {% empty %}
-      <p>No active watchlist.</p>
+      <p>No watchlist.</p>
       {% endfor %}
     </section>
   </section>

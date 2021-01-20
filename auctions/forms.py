@@ -13,13 +13,13 @@ class AddAuction(forms.Form):
         'rows' : 10, 
         'class' : 'add-form__description form-control'
         }))
+    category = forms.ModelChoiceField(label='', initial=1, queryset=Category.objects.all(), required=True, widget=forms.Select(attrs={
+        'class' : 'add-form__category form-control'
+    }))
     price = forms.DecimalField(label='', min_value=0, widget=forms.NumberInput(attrs={
         'placeholder': 'Bid', 
         'class' : 'add-form__price form-control'
         }))
-    category = forms.ModelChoiceField(label='', initial=1, queryset=Category.objects.all(), required=True, widget=forms.Select(attrs={
-        'class' : 'add-form__category form-control'
-    }))
     url = forms.ImageField(label='', required=False)
 
 class AddBid(forms.Form):
@@ -35,5 +35,7 @@ class AddComment(forms.Form):
         }))
 
 class CategoryOption(forms.Form):
-    category = forms.ModelChoiceField(label='', widget=forms.Select, queryset=Category.objects.all(), required=True)
+    category = forms.ModelChoiceField(label='', queryset=Category.objects.all(), required=True, widget=forms.Select(attrs={
+        'class' : 'form-control col-2'
+    }))
         

@@ -53,6 +53,12 @@ body .index .cards .card:hover {
   box-shadow: 0 2px 5px 5px rgba(111, 104, 104, 0.1), 0 2px 5px 5px rgba(100, 100, 132, 0.1);
   transition: 0.5s;
 }
+body .index .cards .no-listings {
+  grid-column: 1/5;
+  grid-row: 1/2;
+  text-align: center;
+  padding: 8%;
+}
 body .auction {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -146,7 +152,7 @@ body .watchlist .cards .list .card {
   border-radius: 10px;
   color: #101010;
   height: 175px;
-  width: 75%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   transition: 0.5s;
@@ -168,11 +174,11 @@ body .watchlist .cards .list .card:hover {
   transition: 0.5s;
 }
 body .add-auction {
-  width: 50%;
+  width: 80%;
 }
 body .add-auction .add-title {
   text-align: center;
-  padding: 8%;
+  padding: 5%;
 }
 body .add-auction .add-form {
   display: grid;
@@ -220,6 +226,42 @@ body .form-register {
 body .form-register .title {
   text-align: center;
   padding: 8%;
+}
+body .not-found {
+  text-align: center;
+  background-image: url("https://cdn.pixabay.com/photo/2012/04/02/16/06/error-24842_1280.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+body .not-found .title {
+  margin-bottom: 20%;
+  padding: 4%;
+  opacity: 80%;
+  color: white;
+  font-weight: bold;
+}
+body .not-found .content {
+  padding: 2%;
+  font-size: large;
+  background-color: aliceblue;
+  opacity: 80%;
+  color: black;
+  box-shadow: 0 2px 5px 5px rgba(111, 104, 104, 0.1), 0 2px 5px 5px rgba(100, 100, 132, 0.1);
+}
+
+input[type=submit] {
+  background: transparent;
+  border-radius: 25px;
+  height: 30px;
+  width: 20%;
+  transition: 0.5s;
+  outline: none;
+}
+input[type=submit]:hover {
+  background: steelblue;
+  color: aliceblue;
+  transition: 0.5s;
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -3,17 +3,22 @@
 {% block body %}
 <main class="container add-auction">
   <section class="add-title">
-    <h2>Add Action:</h2>
+    <h2>New Listing</h2>
   </section>
-  <form method="POST" action="{% url 'add' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <section class="add-form">
+  <section class="row">
+    <figure class="col-5">
+      <img src='https://cdn1.iconfinder.com/data/icons/handy-vol-9/100/Artboard_5-512.png' alt="add" width="450">
+    </figure>
+    <form class="col-7" method="POST" action="{% url 'add' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <section class="add-form">
         {{ add_auction_form }}
-      <section class="add-form__button">
-        <input type="submit">
+        <section class="add-form__button">
+          <input type="submit">
+        </section>
       </section>
-    </section>
     </form>
+  </section>
 </main>
-  
+
 {% endblock %}

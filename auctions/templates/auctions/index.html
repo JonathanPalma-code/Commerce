@@ -7,9 +7,11 @@
         <h2>Active Listings</h2>
         <form method="POST" action="">
             {% csrf_token %}
-            <section>Filter by Category {{ category_option }}
-                <input type="submit" value="Search">
+            <section class="d-flex justify-content-center align-items-center">
+                <section class="p-2">Filter by Category</section>
+                {{ category_option }}
             </section>
+            <input class="m-2" type="submit" value="Search">
         </form>
     </section>
     <section class='container'>
@@ -37,7 +39,9 @@
                 </section>
             </a>
             {% empty %}
-            <p>No active auctions.</p>
+            <section class="no-listings">
+                <p>No active listings.</p>
+            </section>
             {% endfor %}
         </section>
     </section>

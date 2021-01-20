@@ -1,13 +1,9 @@
 $background-colour: aliceblue;
-$sidebar-color: steelblue;
+$button-color: steelblue;
 $radious: 25px;
-$title-weight: bold;
-$wiki: italic;
 $shadow-black:
 0 2px 5px 5px rgba(111, 104, 104, 0.1),
 0 2px 5px 5px rgba(100, 100, 132, 0.1);
-
-$shadow-white: 3px 3px 5px 6px aliceblue;
 
 body {
   padding: 2%;
@@ -71,6 +67,13 @@ body {
           box-shadow: $shadow-black;
           transition: 0.5s;
         }
+      }
+
+      .no-listings {
+        grid-column: 1 / 5;
+        grid-row: 1 / 2;
+        text-align: center;
+        padding: 8%;
       }
     }
   }
@@ -195,7 +198,7 @@ body {
           border-radius: 10px;
           color: #101010;
           height: 175px;
-          width: 75%;
+          width: 100%;
           justify-content: center;
           align-items: center;
           transition: 0.5s;
@@ -224,11 +227,11 @@ body {
   }
 
   .add-auction {
-    width: 50%;
+    width: 80%;
 
     .add-title {
       text-align: center;
-      padding: 8%;
+      padding: 5%;
     }
 
     .add-form {
@@ -288,5 +291,45 @@ body {
       text-align: center;
       padding: 8%;
     }
+  }
+
+  .not-found {
+    text-align: center;
+    background-image: url('https://cdn.pixabay.com/photo/2012/04/02/16/06/error-24842_1280.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+
+    .title {
+      margin-bottom: 20%;
+      padding: 4%;
+      opacity: 80%;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .content {
+      padding: 2%;
+      font-size: large;
+      background-color: $background-colour;
+      opacity: 80%;
+      color: black;
+      box-shadow: $shadow-black;
+    }
+  }
+}
+
+input[type=submit] {
+  background: transparent;
+  border-radius: $radious;
+  height: 30px;
+  width: 20%;
+  transition: 0.5s;
+  outline: none;
+
+  &:hover {
+    background: $button-color;
+    color: $background-colour;
+    transition: 0.5s;
   }
 }

@@ -130,10 +130,10 @@ def auction(request, auction_id):
         if request.method == 'POST' and 'watchlist_btn' in request.POST:
             if in_watch:
                 in_watch.delete()
-                return HttpResponseRedirect(reverse('index'))
+                return HttpResponseRedirect(reverse('auction', args=[auction_id]))
             else:
                 add_wathlist = Watchlist.objects.create(user=request.user, auction=auction)
-                return HttpResponseRedirect(reverse('watchlist', args=[request.user.id]))
+                return HttpResponseRedirect(reverse('auction', args=[auction_id]))
         
         if request.method == 'POST' and 'bid_btn' in request.POST:
             form = AddBid(request.POST)
